@@ -1,36 +1,29 @@
 #include "csv_table_widget.h"
 #include "data_struct.h" // Include the struct header
-#include <QVBoxLayout>
-#include <QHeaderView>
 #include <QFileInfo>
 #include <QDebug>
 #include <BTCSet.h>
 #include <QDateTime>
 
-CsvTableWidget::CsvTableWidget(QWidget *parent) : QWidget(parent), tableWidget(new QTableWidget(this))
+WeatherReader::WeatherReader() 
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(tableWidget);
-
-    // Set up the tableWidget properties
-    tableWidget->setColumnCount(0); // Initially, no columns
-    tableWidget->setRowCount(0);    // Initially, no rows
+    
 }
 
-CsvTableWidget::~CsvTableWidget()
+WeatherReader::~WeatherReader()
 {
 }
 
-bool CsvTableWidget::loadCsv(const QString &filePath)
+bool WeatherReader::loadCsv(const QString &filePath)
 {
     QFile file(filePath);
     QFileInfo fileInfo(filePath);
 
     if (!fileInfo.exists())
-        QMessageBox::warning(this, "File Error", "File '" + filePath + "' does not exist");
+       qDebug() << "File Error", "File '" + filePath + "' does not exist";
     // Check if file exists
     if (!fileInfo.exists() || !file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, "File Error", "Unable to open the file: " + filePath);
+        qDebug() << "File Error", "Unable to open the file: " + filePath;
         return false;
     }
 
@@ -39,12 +32,9 @@ bool CsvTableWidget::loadCsv(const QString &filePath)
     QString line = in.readLine(); // First line should contain the headers
 
     if (!line.isEmpty()) {
-        // Split the header line into individual columns based on commas
-        headers = line.split(",");
-        tableWidget->setColumnCount(headers.size());
-        tableWidget->setHorizontalHeaderLabels(headers);
+    
     } else {
-        QMessageBox::warning(this, "File Error", "CSV file is empty.");
+        qDebug() << "File Error", "CSV file is empty.";
         return false;
     }
     CTimeSeries<double> precipitation;
@@ -188,7 +178,7 @@ bool CsvTableWidget::loadCsv(const QString &filePath)
             data.WindEquipmentChangeDate = cells[121];
 
 
-            double value = convertToExcelDateTime(data.DATE.remove('"'));
+            double value = convertToExcelDateTime(data.DATE.remove('"'), "yyyy-MM-ddThh:mm:ss");
 
             if (!data.HourlyPrecipitation.isEmpty())
             {
@@ -196,7 +186,7 @@ bool CsvTableWidget::loadCsv(const QString &filePath)
             }
             if (data.SOURCE.remove('"')=="7")
             {   if (value != -1)
-                    precipitation.append( convertToExcelDateTime(data.DATE.remove('"')),  data.HourlyPrecipitation.remove('"').toDouble()/100.00);
+                    precipitation.append( convertToExcelDateTime(data.DATE.remove('"'), "yyyy-MM-ddThh:mm:ss"),  data.HourlyPrecipitation.remove('"').toDouble()/100.00);
                 else
                 {   precipitation.append( _last_value + 1.0/24.0,  data.HourlyPrecipitation.remove('"').toDouble()/100.00);
                     error_count++;
@@ -219,15 +209,12 @@ bool CsvTableWidget::loadCsv(const QString &filePath)
     return true;
 }
 
-#include <QDateTime>
-#include <QDebug>
-
-double convertToExcelDateTime(const QString &dateTimeString) {
+double convertToExcelDateTime(const QString &dateTimeString, const QString& format) {
     // Excel's "zero date" is 1900-01-01 (but Excel wrongly treats 1900 as a leap year)
     QDateTime excelZeroDate(QDate(1900, 1, 1), QTime(0, 0));
 
     // Parse the input dateTime string
-    QDateTime inputDateTime = QDateTime::fromString(dateTimeString, "yyyy-MM-ddTHH:mm:ss");
+    QDateTime inputDateTime = QDateTime::fromString(dateTimeString, format);
 
     // Ensure the input dateTime is valid
     if (!inputDateTime.isValid()) {

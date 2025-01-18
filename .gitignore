@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+.vs/FlowNWeatherReader/FileContentIndex/
+
+.vs/FlowNWeatherReader/v17/
+
+FlowNWea.DFE8365B/x64/Debug/FlowNWea.DFE8365B.tlog/
+
+FlowNWea.DFE8365B/x64/Debug/
+
+x64/Debug/

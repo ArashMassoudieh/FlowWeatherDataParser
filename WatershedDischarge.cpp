@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QString>
 #include <QDateTime>
+#include <QTimeZone>
 
 // Function to parse the TSV file
 QList<WatershedDischarge> parseTSVFile(const QString &filePath) {
@@ -51,28 +52,4 @@ QList<WatershedDischarge> parseTSVFile(const QString &filePath) {
     return records;
 }
 
-double convertToExcelDateTime(const QString &inputDateTime) {
-    // Define the input date format
-    QString inputFormat = "yyyy-MM-dd HH:mm";
 
-    // Parse the input string to QDateTime
-    QDateTime dateTime = QDateTime::fromString(inputDateTime, inputFormat);
-    if (!dateTime.isValid()) {
-        qWarning() << "Invalid date/time format:" << inputDateTime;
-        return -1; // Return an invalid value
-    }
-
-    // Define the base date for Excel (January 1, 1900)
-    QDateTime excelBaseDate(QDate(1900, 1, 1), QTime(0, 0, 0), Qt::UTC);
-
-    // Calculate the difference in days and convert to Excel date number
-    qint64 secondsDiff = excelBaseDate.secsTo(dateTime);
-    double excelDate = secondsDiff / 86400.0 + 1; // 86400 seconds in a day, +1 for Excel day 1
-
-    // Account for Excel's leap year bug (1900 is incorrectly treated as a leap year)
-    if (dateTime.date() > QDate(1900, 2, 28)) {
-        excelDate += 1;
-    }
-
-    return excelDate;
-}

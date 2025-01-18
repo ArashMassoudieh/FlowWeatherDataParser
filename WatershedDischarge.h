@@ -18,6 +18,5 @@ struct WatershedDischarge {
 // Function declaration for parsing the TSV file
 QList<WatershedDischarge> parseTSVFile(const QString &filePath);
 
-double convertToExcelDateTime(const QString &inputDateTime);
 
 #endif // WATERSHEDDISCHARGE_H

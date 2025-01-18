@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include "WatershedDischarge.h"
+#include "csv_table_widget.h"
 #include "BTC.h"
 
 int main(int argc, char *argv[]) {
@@ -17,7 +18,7 @@ int main(int argc, char *argv[]) {
                  << "Time Zone:" << record.tz_cd
                  << "Discharge Value:" << record.discharge_value
                  << "Code:" << record.discharge_code;*/
-        output.append(convertToExcelDateTime(record.datetime.toString("yyyy-MM-dd HH:mm")),record.discharge_value*pow(0.3048,3)*86400);
+        output.append(convertToExcelDateTime(record.datetime.toString("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm"),record.discharge_value*pow(0.3048,3)*86400);
 
     }
     output.writefile("/home/hoomanmoradpour/Dropbox/HickeyRun/flow.csv");

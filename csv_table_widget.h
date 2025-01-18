@@ -1,28 +1,26 @@
 #ifndef CSV_TABLE_WIDGET_H
 #define CSV_TABLE_WIDGET_H
 
-#include <QWidget>
-#include <QTableWidget>
+
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
-#include <QMessageBox>
 
-class CsvTableWidget : public QWidget
+
+class WeatherReader
 {
-    Q_OBJECT
 
 public:
-    explicit CsvTableWidget(QWidget *parent = nullptr);
-    ~CsvTableWidget();
+    explicit WeatherReader();
+    ~WeatherReader();
 
     bool loadCsv(const QString &filePath);
 
 private:
-    QTableWidget *tableWidget;
+    
 };
 
-double convertToExcelDateTime(const QString &dateTimeString);
+double convertToExcelDateTime(const QString &dateTimeString, const QString& format);
 QStringList splitCsv(const QString &line);
 
 #endif // CSV_TABLE_WIDGET_H
