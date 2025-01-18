@@ -6,10 +6,11 @@ CONFIG += c++17 cmdline
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += /home/hoomanmoradpour/Projects/Utilities
+INCLUDEPATH += ../Utilities
 
 SOURCES += \
         WatershedDischarge.cpp \
+        csv_table_widget.cpp \
         main.cpp
 
 # Default rules for deployment.
@@ -18,4 +19,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    WatershedDischarge.h
+    WatershedDischarge.h \
+    csv_table_widget.h \
+    data_struct.h

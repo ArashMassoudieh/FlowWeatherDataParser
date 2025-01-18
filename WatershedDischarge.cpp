@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QTimeZone>
+#include <iostream>
 
 // Function to parse the TSV file
 QList<WatershedDischarge> parseTSVFile(const QString &filePath) {
@@ -27,6 +28,7 @@ QList<WatershedDischarge> parseTSVFile(const QString &filePath) {
     }
 
     // Process each data line
+    unsigned int counter = 0;
     while (!in.atEnd()) {
         QString line = in.readLine();
         if (line.trimmed().isEmpty()) continue;
@@ -44,8 +46,10 @@ QList<WatershedDischarge> parseTSVFile(const QString &filePath) {
         record.tz_cd = fields[3];
         record.discharge_value = fields[4].toDouble();
         record.discharge_code = fields[5];
-
         records.append(record);
+        counter++;
+        if (counter%1000==0)
+            std::cout<<counter << " records read"<<std::endl;
     }
 
     file.close();
